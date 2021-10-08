@@ -54,6 +54,27 @@ int main(int argc, const char *argv[]) {
   fits_create_img(fitsfile, bitpix, naxis, naxes, &status);
   fits_write_img(fitsfile, TDOUBLE, 1, naxes[0] * naxes[1], &(array[0]), &status);
 
+  char type1[8] = "Ra";
+  char type2[8] = "Dec";
+  fits_update_key(fitsfile, TSTRING, "CTYPE1", type1, "", &status);
+  fits_update_key(fitsfile, TSTRING, "CTYPE2", type2, "", &status);
+
+  long pix1 = 1;
+  double val1 = h->GetXaxis()->GetBinCenter(1);
+  double det1 = h->GetXaxis()->GetBinWidth(1);
+  fits_update_key(fitsfile, TLONG, "CRPIX1", &pix1, "", &status);
+  fits_update_key(fitsfile, TDOUBLE, "CRVAL1", &val1, "", &status);
+  fits_update_key(fitsfile, TDOUBLE, "CDELT1", &det1, "", &status);
+
+  long pix2 = 1;
+  double val2 = h->GetYaxis()->GetBinCenter(1);
+  double det2 = h->GetYaxis()->GetBinWidth(1);
+  fits_update_key(fitsfile, TLONG, "CRPIX2", &pix2, "", &status);
+  fits_update_key(fitsfile, TDOUBLE, "CRVAL2", &val2, "", &status);
+  fits_update_key(fitsfile, TDOUBLE, "CDELT2", &det2, "", &status);
+
+
+
   fits_close_file(fitsfile, &status);
   return 0;
 }
