@@ -1,0 +1,2 @@
+ADD_EXECUTABLE(th2_to_fits th2_to_fits.cc)
+TARGET_LINK_LIBRARIES(th2_to_fits docopt ${CFITSIO_LIBRARIES} ${ROOT_LIBRARIES})

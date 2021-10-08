@@ -1,0 +1,44 @@
+cmake_minimum_required(VERSION 3.2)
+project(skmap_generator CXX)
+
+#=============================================================================
+# All done editing
+SET(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR})
+SET(LIBRARY_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/lib)
+SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/CMakeModules)
+SET(CMAKE_CXX_FLAGS "-O2 -std=c++11")
+
+FIND_PACKAGE(CFITSIO)
+IF(CFITSIO_FOUND)
+  INCLUDE_DIRECTORIES(${CFITSIO_INCLUDE_DIRS})
+  MESSAGE(STATUS "cfitsio found as ${CFITSIO_LIBRARIES}")
+ELSE()
+  MESSAGE(FATAL_ERROR "cfitsio not found,  please specify correct CFITSIO_ROOT")
+ENDIF()
+
+FIND_PACKAGE(ROOT)
+IF(ROOT_FOUND)
+  INCLUDE_DIRECTORIES(${ROOT_INCLUDE_DIRS})
+  MESSAGE(STATUS "ROOT found as ${ROOT_LIBRARIES}")
+ELSE()
+  MESSAGE(FATAL_ERROR "ROOT not found,  please specify correct ROOT in bash")
+ENDIF()
+
+IF (USE_BOOST)
+  FIND_PACKAGE(Boost COMPONENTS regex)
+  IF (Boost_FOUND)
+    MESSAGE(STATUS "Boost_LIBRARIES=${Boost_LIBRARIES}")
+    MESSAGE(STATUS "Boost_INCLUDE_DIR=${Boost_INCLUDE_DIR}")
+    INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+  ELSE()
+    MESSAGE(FATAL_ERROR "Boost not found, please specify correct BOOST_ROOT")
+  ENDIF()
+  ADD_DEFINITIONS(-DUSE_BOOST)
+ELSE()
+  MESSAGE(STATUS "Do not USE_BOOST")
+ENDIF()
+
+
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/src ${CMAKE_SOURCE_DIR}/docopt)
+ADD_SUBDIRECTORY(docopt)
+ADD_SUBDIRECTORY(src)
